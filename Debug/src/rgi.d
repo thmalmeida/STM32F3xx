@@ -1,4 +1,4 @@
-src/rgi.o: ../src/rgi.c ../src/rgi.h ../system/include/cmsis/stm32f30x.h \
+src/rgi.o: ../src/rgi.c ../system/include/cmsis/stm32f30x.h \
  ../system/include/cmsis/core_cm4.h \
  ../system/include/cmsis/core_cmInstr.h \
  ../system/include/cmsis/cmsis_gcc.h \
@@ -26,10 +26,8 @@ src/rgi.o: ../src/rgi.c ../src/rgi.h ../system/include/cmsis/stm32f30x.h \
  ../system/include/stm32f3-stdperiph/stm32f30x_tim.h \
  ../system/include/stm32f3-stdperiph/stm32f30x_usart.h \
  ../system/include/stm32f3-stdperiph/stm32f30x_wwdg.h \
- ../system/include/stm32f3-stdperiph/stm32f30x_misc.h ../src/timers.h \
- ../src/stm32f3_discovery.h
-
-../src/rgi.h:
+ ../system/include/stm32f3-stdperiph/stm32f30x_misc.h ../src/rgi.h \
+ ../src/timers.h ../src/stm32f3_discovery.h
 
 ../system/include/cmsis/stm32f30x.h:
 
@@ -90,6 +88,8 @@ src/rgi.o: ../src/rgi.c ../src/rgi.h ../system/include/cmsis/stm32f30x.h \
 ../system/include/stm32f3-stdperiph/stm32f30x_wwdg.h:
 
 ../system/include/stm32f3-stdperiph/stm32f30x_misc.h:
+
+../src/rgi.h:
 
 ../src/timers.h:
 

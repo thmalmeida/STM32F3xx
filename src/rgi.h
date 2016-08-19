@@ -14,22 +14,23 @@
 
 
 #include <stm32f30x.h>
-#include <stdio.h>
-
-void S3_ON();
-void S3_OFF();
-void S7_ON();
-void S7_OFF();
 
 // Abertura do Cilindro de tração. Solenoide 3 e 7.
-void C7_TR();
-void C7_STOP();
-void C6_EX();
-void C6_STOP();
-void C5_UP();
-void C5_STOP();
-void RGI_LED(unsigned int load, FunctionalState status);
-void RGI_Out(unsigned int load, FunctionalState status);
+ uint8_t RGI_get_In(uint8_t inValue);
+void RGI_set_Out(unsigned int load, FunctionalState status);
+void RGI_set_LED(unsigned int load, FunctionalState status);
+void valve_1(uint8_t solenoid, FunctionalState status);
+void valve_2(uint8_t solenoid, FunctionalState status);
+void valve_3(uint8_t solenoid, FunctionalState status);
+void valve_4(FunctionalState status);
+uint8_t buttonUP();
+uint8_t buttonDOWN();
+uint8_t buttonLEFT();
+uint8_t buttonRIGHT();
+uint8_t buttonEAST();
+uint8_t buttonWEST();
+uint8_t button1();
+uint8_t button2();
 void RGI_Demo();
 void RGI_Process();
 void RGI_Init();
