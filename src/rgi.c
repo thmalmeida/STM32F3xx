@@ -345,6 +345,10 @@ void valve_4(FunctionalState status)
 {
 	RGI_set_Out(7, status);
 }
+void oilPump(FunctionalState status)
+{
+	RGI_set_Out(8, status);
+}
 
 uint8_t buttonUP()
 {
@@ -475,24 +479,23 @@ void RGI_Process()
 {
 	if(buttonUP())
 	{
-		valve_1(1, ENABLE);
-		valve_4(ENABLE);
+		RGI_set_Out(11, ENABLE);
 
 		RGI_set_LED(1, ENABLE);
 		RGI_set_LED(2, DISABLE);
 	}
-//	else if(buttonDOWN())
-//	{
-//		valve_1(2, ENABLE);
-//		valve_4(ENABLE);
-//
-//		RGI_set_LED(1, ENABLE);
-//		RGI_set_LED(2, DISABLE);
-//	}
+	else if(buttonDOWN())
+	{
+		RGI_set_Out(12, ENABLE);
+
+		RGI_set_LED(1, ENABLE);
+		RGI_set_LED(2, DISABLE);
+	}
 	else if(buttonLEFT())
 	{
 		valve_2(1, ENABLE);
 		valve_4(ENABLE);
+		oilPump(ENABLE);
 
 		RGI_set_LED(1, ENABLE);
 		RGI_set_LED(2, DISABLE);
@@ -501,6 +504,7 @@ void RGI_Process()
 	{
 		valve_2(2, ENABLE);
 		valve_4(ENABLE);
+		oilPump(ENABLE);
 
 		RGI_set_LED(1, ENABLE);
 		RGI_set_LED(2, DISABLE);
@@ -509,6 +513,7 @@ void RGI_Process()
 	{
 		valve_3(1, ENABLE);
 		valve_4(ENABLE);
+		oilPump(ENABLE);
 
 		RGI_set_LED(1, ENABLE);
 		RGI_set_LED(2, DISABLE);
@@ -517,20 +522,26 @@ void RGI_Process()
 	{
 		valve_3(2, ENABLE);
 		valve_4(ENABLE);
+		oilPump(ENABLE);
 
 		RGI_set_LED(1, ENABLE);
 		RGI_set_LED(2, DISABLE);
 	}
 	else if(button1())
 	{
-		RGI_set_Out(11, ENABLE);
+		valve_1(1, ENABLE);
+		valve_4(ENABLE);
+		oilPump(ENABLE);
 
 		RGI_set_LED(1, ENABLE);
 		RGI_set_LED(2, DISABLE);
 	}
 	else if(button2())
 	{
-		RGI_set_Out(12, ENABLE);
+		valve_1(2, ENABLE);
+		valve_4(ENABLE);
+		oilPump(ENABLE);
+
 
 		RGI_set_LED(1, ENABLE);
 		RGI_set_LED(2, DISABLE);
@@ -550,6 +561,8 @@ void RGI_Process()
 		valve_3(2, DISABLE);
 
 		valve_4(DISABLE);
+
+		oilPump(DISABLE);
 
 		RGI_set_LED(1, DISABLE);
 		RGI_set_LED(2, ENABLE);
