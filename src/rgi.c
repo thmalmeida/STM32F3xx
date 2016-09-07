@@ -58,6 +58,7 @@ int timer_pressure = 0;
 uint8_t RGI_get_In(uint8_t inValue)
 {
 	uint8_t status;
+
 	switch(inValue)
 	{
 		case 1:
@@ -349,39 +350,71 @@ void oilPump(FunctionalState status)
 {
 	RGI_set_Out(8, status);
 }
+void turnALL_OFF()
+{
+	RGI_set_Out(11, DISABLE);
+	RGI_set_Out(12, DISABLE);
 
-uint8_t buttonUP()
-{
-	return RGI_get_In(1);
+	valve_1(1, DISABLE);
+	valve_1(2, DISABLE);
+
+	valve_2(1, DISABLE);
+	valve_2(2, DISABLE);
+
+	valve_3(1, DISABLE);
+	valve_3(2, DISABLE);
+
+	valve_4(DISABLE);
+
+	oilPump(DISABLE);
+
+	RGI_set_LED(1, DISABLE);
+	RGI_set_LED(2, ENABLE);
 }
-uint8_t buttonDOWN()
+
+const uint8_t timeDebounce = 100;
+uint8_t button(uint8_t btn) // UP
 {
-	return RGI_get_In(2);
+	if(RGI_get_In(btn))
+	{
+		delay_ms(timeDebounce);
+
+		if(RGI_get_In(btn))
+			return RGI_get_In(btn);
+		else
+			return 0;
+	}
+	else
+		return 0;
 }
-uint8_t buttonLEFT()
-{
-	return RGI_get_In(3);
-}
-uint8_t buttonRIGHT()
-{
-	return RGI_get_In(4);
-}
-uint8_t buttonEAST()
-{
-	return RGI_get_In(5);
-}
-uint8_t buttonWEST()
-{
-	return RGI_get_In(6);
-}
-uint8_t button1()
-{
-	return RGI_get_In(7);
-}
-uint8_t button2()
-{
-	return RGI_get_In(8);
-}
+//uint8_t buttonDOWN()
+//{
+//	return RGI_get_In(2);
+//}
+//uint8_t buttonLEFT()
+//{
+//	return RGI_get_In(3);
+//}
+//uint8_t buttonRIGHT()
+//{
+//	return RGI_get_In(4);
+//}
+//uint8_t buttonEAST()
+//{
+//	return RGI_get_In(5);
+//}
+//uint8_t buttonWEST()
+//{
+//	return RGI_get_In(6);
+//}
+//uint8_t button1()
+//{
+//	return RGI_get_In(7);
+//}
+//uint8_t button2()
+//{
+//	return RGI_get_In(8);
+//}
 
 // Abertura do Cilindro de tração. Solenoide 3 e 7.
 
@@ -477,21 +510,21 @@ void RGI_Init()
 
 void RGI_Process()
 {
-	if(buttonUP())
+	if(button(1))		// button UP
 	{
 		RGI_set_Out(11, ENABLE);
 
 		RGI_set_LED(1, ENABLE);
 		RGI_set_LED(2, DISABLE);
 	}
-	else if(buttonDOWN())
+	else if(button(2))	// Button DOWN
 	{
 		RGI_set_Out(12, ENABLE);
 
 		RGI_set_LED(1, ENABLE);
 		RGI_set_LED(2, DISABLE);
 	}
-	else if(buttonLEFT())
+	else if(button(3))	// Button LEFT
 	{
 		valve_2(1, ENABLE);
 		valve_4(ENABLE);
@@ -500,7 +533,7 @@ void RGI_Process()
 		RGI_set_LED(1, ENABLE);
 		RGI_set_LED(2, DISABLE);
 	}
-	else if(buttonRIGHT())
+	else if(button(4))	// Button RIGHT
 	{
 		valve_2(2, ENABLE);
 		valve_4(ENABLE);
@@ -509,25 +542,39 @@ void RGI_Process()
 		RGI_set_LED(1, ENABLE);
 		RGI_set_LED(2, DISABLE);
 	}
-	else if(buttonEAST())
+	else if(button(5))	// Button diagonal DOWN
 	{
-		valve_3(1, ENABLE);
-		valve_4(ENABLE);
-		oilPump(ENABLE);
+		if(!button(9))	// keep 0V with push up (3.3V) high logic.
+		{
+			valve_3(1, ENABLE);
+			valve_4(ENABLE);
+			oilPump(ENABLE);
 
-		RGI_set_LED(1, ENABLE);
-		RGI_set_LED(2, DISABLE);
+			RGI_set_LED(1, ENABLE);
+			RGI_set_LED(2, DISABLE);
+		}
+		else
+		{
+			turnALL_OFF();
+		}
 	}
-	else if(buttonWEST())
+	else if(button(6))	// Button diagonal UP
 	{
-		valve_3(2, ENABLE);
-		valve_4(ENABLE);
-		oilPump(ENABLE);
+		if(!button(11))	// keep 0V with push up (3.3V) high logic.
+		{
+			valve_3(2, ENABLE);
+			valve_4(ENABLE);
+			oilPump(ENABLE);
 
-		RGI_set_LED(1, ENABLE);
-		RGI_set_LED(2, DISABLE);
+			RGI_set_LED(1, ENABLE);
+			RGI_set_LED(2, DISABLE);
+		}
+		else
+		{
+			turnALL_OFF();
+		}
 	}
-	else if(button1())
+	else if(button(7))	// Button 1
 	{
 		valve_1(1, ENABLE);
 		valve_4(ENABLE);
@@ -536,7 +583,7 @@ void RGI_Process()
 		RGI_set_LED(1, ENABLE);
 		RGI_set_LED(2, DISABLE);
 	}
-	else if(button2())
+	else if(button(8))	// Button 2
 	{
 		valve_1(2, ENABLE);
 		valve_4(ENABLE);
@@ -548,24 +595,7 @@ void RGI_Process()
 	}
 	else
 	{
-		RGI_set_Out(11, DISABLE);
-		RGI_set_Out(12, DISABLE);
-
-		valve_1(1, DISABLE);
-		valve_1(2, DISABLE);
-
-		valve_2(1, DISABLE);
-		valve_2(2, DISABLE);
-
-		valve_3(1, DISABLE);
-		valve_3(2, DISABLE);
-
-		valve_4(DISABLE);
-
-		oilPump(DISABLE);
-
-		RGI_set_LED(1, DISABLE);
-		RGI_set_LED(2, ENABLE);
+		turnALL_OFF();
 	}
 }
 void RGI_Demo()
